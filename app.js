@@ -91,7 +91,7 @@ function editTask(e) {
     // Edit text
     const newText = prompt('Editing', oldText);
     // Only change old text if different from new
-    if (newText !== oldText) {
+    if (newText && newText !== oldText) {
       const li = e.target.parentElement.parentElement;
       li.textContent = newText;
       createDeleteAndEditLinks(li);
@@ -147,11 +147,12 @@ function filterTasks(e) {
 // Helper functions
 function checkAndGetTask() {
   let tasks = null;
-  if (localStorage.getItem('tasks') === null) {
+  const storedTasks = localStorage.getItem('tasks')
+  if (!storedTasks) {
     tasks = [];    
   } else {
       // local storage only stores strings so it needs to be parsed as JSON. Get stored tasks
-      tasks = JSON.parse(localStorage.getItem('tasks'));
+      tasks = JSON.parse(storedTasks);
     }
     return tasks;
 }
