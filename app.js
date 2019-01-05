@@ -1,6 +1,6 @@
 // Define UI vars
 const form = document.querySelector('#task-form');
-const taskList = document.querySelector('.collection');
+const taskList = document.querySelector('.task-list');
 const clearBtn = document.querySelector('.clear-tasks');
 const filter = document.querySelector('#filter');
 const taskInput = document.querySelector('#task');
@@ -85,6 +85,8 @@ function removeTaskFromLocalStorage(taskItem) {
 
 // Edit task and save to local storage
 function editTask(e) {
+  console.log(e.target);
+  
   if (e.target.parentElement.classList.contains('edit-item')) {
     // Get task item text content
     const oldText = e.target.parentElement.parentElement.textContent;
@@ -92,9 +94,9 @@ function editTask(e) {
     const newText = prompt('Editing', oldText);
     // Only change old text if different from new and not empty
     if (newText && newText !== oldText) {
-      const li = e.target.parentElement.parentElement;
-      li.textContent = newText;
-      createDeleteAndEditLinks(li);
+      const cardContent = e.target.parentElement.parentElement;
+      cardContent.textContent = newText;
+      createDeleteAndEditLinks(cardContent);
 
       saveEditedTask(newText, oldText);
     }
@@ -134,7 +136,7 @@ function clearTasksFromLocalStorage() {
 function filterTasks(e) {
   const text = e.target.value.toLowerCase();
   // Get all list items and compare to the text entered
-  document.querySelectorAll('.collection-item').forEach(task => {
+  document.querySelectorAll('.card-content').forEach(task => {
     const item = task.firstChild.textContent;
     if (item.toLowerCase().indexOf(text) != -1) {
       task.style.display = 'block';
@@ -158,20 +160,27 @@ function checkAndGetTask() {
 }
 
 function createTask(task) {
-  // Create li element
-  const li = document.createElement('li');
-  // Add class 
-  li.classList.add('collection-item');
-  // Create text node and append to li 
-  li.appendChild(document.createTextNode(task));
-  createDeleteAndEditLinks(li);
 
-  // Append the li to the ul
-  taskList.appendChild(li);
+  // add content inside a card
+  const card = document.createElement('div');
+  const cardContent = document.createElement('div');
+
+  // add classes to the divs
+  card.className = 'card';
+  cardContent.className = 'card-content';
+
+  // Create text node and append to cardContent 
+  cardContent.appendChild(document.createTextNode(task));
+
+  card.appendChild(cardContent);
+
+  createDeleteAndEditLinks(cardContent);
+
+  taskList.appendChild(card);
 }
 
 // Create edit and delete links
-function createDeleteAndEditLinks(li) {
+function createDeleteAndEditLinks(cardContent) {
   // Create new link element 
   const link = document.createElement('a');
   // Add class. Can also use link.className = 'del sec'
@@ -179,14 +188,15 @@ function createDeleteAndEditLinks(li) {
   // Add icon html
   link.innerHTML = '<i class="fa fa-remove"></i>';
 
+
   // Create link element for edit
   const editLink = document.createElement('a');
   editLink.classList.add('edit-item', 'secondary-content');
   editLink.innerHTML = '<i class="fa fa-edit"></i>';
 
-  // Append the link to li
-  li.appendChild(editLink);
-  li.appendChild(link);
+  // append edit/delete links to card content
+  cardContent.appendChild(editLink);
+  cardContent.appendChild(link);
 }
 
 
@@ -206,10 +216,15 @@ function addTaskAlt (e) {
     // Create a list
     listItem = `
         <li class="collection-item">
-          ${taskInput.value}
-          <a href="#" class="delete-item secondary-content">
-          <i class="fa fa-remove"></i>
-          </a>
+          <div class="card">
+            ${taskInput.value}
+            <a href="#" class="delete-item secondary-content">
+            <i class="fa fa-remove"></i>
+            </a>
+            <a href="#" class="edit-item secondary-content">
+            <i class="fa fa-edit"></i>
+            </a>
+          </div>
         </li>
         `
     taskList.innerHTML += listItem;
