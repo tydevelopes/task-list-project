@@ -74,7 +74,7 @@ function removeTask(e) {
 // Remove from local storage
 function removeTaskFromLocalStorage(taskItem) {
   let tasks = checkAndGetTask();
-  // Go through the stored task and a task matches the text content of the list item deleted, then delete that task from local storage.
+  // Go through the stored task and if a task matches the text content of the list item deleted, then delete that task from local storage.
   tasks.forEach((task, index) => {
     if (taskItem.textContent === task) {
       tasks.splice(index, 1);
@@ -90,7 +90,7 @@ function editTask(e) {
     const oldText = e.target.parentElement.parentElement.textContent;
     // Edit text
     const newText = prompt('Editing', oldText);
-    // Only change old text if different from new
+    // Only change old text if different from new and not empty
     if (newText && newText !== oldText) {
       const li = e.target.parentElement.parentElement;
       li.textContent = newText;
@@ -104,7 +104,7 @@ function editTask(e) {
 // Save edited task
 function saveEditedTask(newText, oldText) {
   let tasks = checkAndGetTask();
-  // Go through the stored task and a task matches the text content of the list item deleted, then delete that task from local storage.
+  // Go through the stored task and if a task matches the text content of the list item deleted, then delete that task from local storage.
   tasks.forEach((task, index) => {
     if (oldText === task) {
       tasks.splice(index, 1, newText);
@@ -141,7 +141,7 @@ function filterTasks(e) {
     } else {
       task.style.display = 'none';
     }
-  })
+  });
 }
 
 // Helper functions
